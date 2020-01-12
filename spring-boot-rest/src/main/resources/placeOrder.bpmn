@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" id="Definitions_1qoy8u3" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="2.2.4">
+  <bpmn:process id="PlaceOrder" name="Place Order" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Bestellung eingegangen">
+      <bpmn:outgoing>SequenceFlow_0lkbqus</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0lkbqus" sourceRef="StartEvent_1" targetRef="UserTask_GetItem" />
+    <bpmn:userTask id="UserTask_GetItem" name="Artikel aus dem Lager holen">
+      <bpmn:incoming>SequenceFlow_0lkbqus</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0l0vvck</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="UserTask_sendItem" name="Artikel verpacken und versenden">
+      <bpmn:incoming>SequenceFlow_0l0vvck</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1yjaequ</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="EndEvent_05jj396" name="Artikel versandt">
+      <bpmn:incoming>SequenceFlow_1yjaequ</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1yjaequ" sourceRef="UserTask_sendItem" targetRef="EndEvent_05jj396" />
+    <bpmn:sequenceFlow id="SequenceFlow_0l0vvck" sourceRef="UserTask_GetItem" targetRef="UserTask_sendItem" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="PlaceOrder">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="173" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="159" y="145" width="64" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0lkbqus_di" bpmnElement="SequenceFlow_0lkbqus">
+        <di:waypoint x="209" y="120" />
+        <di:waypoint x="259" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_0z8fy2i_di" bpmnElement="UserTask_GetItem">
+        <dc:Bounds x="259" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_0jttuuo_di" bpmnElement="UserTask_sendItem">
+        <dc:Bounds x="460" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_05jj396_di" bpmnElement="EndEvent_05jj396">
+        <dc:Bounds x="659" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="639" y="145" width="76" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1yjaequ_di" bpmnElement="SequenceFlow_1yjaequ">
+        <di:waypoint x="560" y="120" />
+        <di:waypoint x="659" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0l0vvck_di" bpmnElement="SequenceFlow_0l0vvck">
+        <di:waypoint x="359" y="120" />
+        <di:waypoint x="460" y="120" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
