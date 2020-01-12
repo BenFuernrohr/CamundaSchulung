@@ -1,14 +1,15 @@
 package info.novatec.bpmn.schulung.testing.process;
 
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareAssertions.assertThat;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.complete;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.execute;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.job;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.task;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.withVariables;
 import static org.camunda.bpm.extension.mockito.CamundaMockito.registerMockInstance;
 import static org.camunda.bpm.extension.mockito.CamundaMockito.verifyExecutionListenerMock;
 import static org.camunda.bpm.extension.mockito.CamundaMockito.verifyJavaDelegateMock;
-import static org.camunda.bpm.extension.mockito.DelegateExpressions.registerExecutionListenerMock;
-import static org.camunda.bpm.extension.mockito.DelegateExpressions.registerJavaDelegateMock;
+import static org.camunda.bpm.extension.mockito.DelegateExpressions.autoMock;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
@@ -44,8 +45,7 @@ public class ProcessTest {
     public void setup() {
         runtimeService = rule.getRuntimeService();
 
-        registerExecutionListenerMock(MyListener.class);
-        registerJavaDelegateMock(MyDelegate.class);
+        autoMock("process.bpmn");
 
         injectableDelegateMock = registerMockInstance(InjectableDelegate.class);
     }
@@ -58,6 +58,9 @@ public class ProcessTest {
         assertThat(processInstance).isWaitingAtExactly("userTask1");
         complete(task(), withVariables("check", true));
 
+        assertThat(processInstance).isWaitingAtExactly("ServiceTask1");
+        execute(job());
+
         assertThat(processInstance).isEnded();
 
         verifyExecutionListenerMock(MyListener.class).executed();
@@ -65,7 +68,7 @@ public class ProcessTest {
     }
 
     @Test
-    public void testUnHappyPath() {
+    public void testCheckboxNotSet() {
         ProcessInstance processInstance = runtimeService
             .createProcessInstanceByKey(PROCESS_DEFINITION_KEY)
             .startBeforeActivity("userTask1")
